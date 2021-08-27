@@ -1,3 +1,11 @@
+/**
+ * Redactor plugin that adds a "class name" selection dropdown to the image editing modal
+ *
+ * @link      https://github.com/simplicate-web/redactor-image-class
+ * @author    Steve Comrie <steve@simplicate.ca>
+ * @version   1.1
+ * 
+ */
 (function(t) {
     t.add('plugin', 'imageclass', {
 
@@ -60,8 +68,11 @@
                 fi = t.dom('<div class="form-item form-item-link" />');
                 lb = t.dom('<label for="redactor-image-styles">' + this.lang.get('imageStyle') + '</label>');
                 se = t.dom('<select id="redactor-image-styles" name="class"></select></div>');
-                opt = t.dom("<option value=''></option>");
-                se.append(opt);
+                
+                if( !this.opts.imageClasses.some( function(element) { return element.default } ) ) {
+                    opt = t.dom("<option value=''></option>");
+                    se.append(opt);
+                }               
 
                 this.opts.imageClasses.forEach(function(element) {
                     opt = t.dom(`<option value='${element.class}'>${element.label}</option>`);
@@ -102,12 +113,22 @@
                                                 return a.length - b.length;
                                             });
 
+                // try to find a matching class name
                 var foundClass = ''
                 possibleClassNames.forEach(function(name) {
                     if( className.includes(name) ) {
                         foundClass = name
                     }
                 });
+
+                // if we didn't match a class, check if we're supposed to have a default to start with
+                if( foundClass == '' && this.opts.imageClasses.some( function(element) { return element.default } ) ) {
+                    this.opts.imageClasses.forEach(function(element) {
+                        if( foundClass == '' && element.default ) {
+                            foundClass = element.class
+                        }
+                    })
+                }
 
                 this.$form.find('select[name=class]').val(foundClass);
                 this.selectedClass = foundClass;

@@ -22,11 +22,19 @@ You can configure the available class names within your redactor JSON config fil
   "plugins": ["imageclass"],
   "imageClasses" : [
     { "label": "Large",   "class": "image image--large" },
-    { "label": "Normal",  "class": "image" },
+    { "label": "Normal",  "class": "image", "default": true },
     { "label": "Small",   "class": "image image--small" }
   ]
   ...
 ```
+
+### Setting a default value
+
+As you can see from the sample configuration above, you can set the `default` attribute to `true` for one of your classes and the plugin will use that value as the default class for all new images.
+
+Setting a default value will also force the user to pick at least one class from the list.
+
+If you choose not a set a default value, and empty option will be available in the drop-down and selected by default.
 
 ## Styling images inside Redactor
 
